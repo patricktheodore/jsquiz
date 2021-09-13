@@ -10,7 +10,12 @@
 </head>
 <body>
     <main>
+        <section>
+            <button class="start-button">begin.</button>
+        </section>
+
         <div class="wrapper">
+            
             <div class="container">
                 <div id="game" class="justify-center flex-column">
                     <h2 id="question">What is the answer to this question?</h2>
@@ -30,16 +35,20 @@
             </div>
 
             
-
+            
+            
             <div class="game-info">
-                <section>
-                    <button class="start-button">begin.</button>
+                <section class="hud">
+                        <p class="hud-label">question.</p>
+                        <h1 id="question-counter"></h1>
                 </section>
-                <section>
-                        <div class="timer-text">120</div>
-                </section>
-                <section>
-                    <div class="score">0</div>
+                <section class="hud">
+                    <p class="hud-label">time.</p>
+                    <h1 class="timer-text"></h1>
+                </section>      
+                <section class="hud">
+                    <p class="hud-label">score.</p>
+                    <h1 id="score"></h1>
                 </section>
             </div>
             

@@ -6,15 +6,18 @@ var choiceA = document.getElementById("choice-a");
 var choiceB = document.getElementById("choice-b");
 var choiceC = document.getElementById("choice-c");
 var choiceD = document.getElementById("choice-d");
+var choiceContainers = document.querySelector(".choice-container");
 var answerCard = document.getElementById("game");
 var gameEl = document.querySelector(".container");
+var scoreEl = document.getElementById("score");
+var questionCounterEl = document.getElementById("question-counter");
 
 
 var currentQuestion = {};
 var availableQuestions = [];
 var score = 0;
 var questionCounter = 0;
-var acceptingAnswers = false;
+var acceptingAnswers = false; //i want sommeone only to be able to click when there is an option available (create delay in between clicks)
 
 var questions = [
     {
@@ -35,7 +38,10 @@ var questions = [
 ];  
 
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 10;
+const MAX_QUESTIONS = 3;
+const TIME_PENALTY = 5;  // 5 sec
+const DELAY = 1000;
+
 
 var timer;
 var timeLeft;
@@ -46,18 +52,17 @@ var possibleAnswers;
 
 //on page load, fetch scores stored in local storage. init will run on page load
 function init() {
-    getScores();
 }
 
 //start game function that begins timer
 function startGame() {
+    answerCard.style = "display:inline";
     timeLeft = 120;
     questionCounter = 0;
     score = 0;
     availableQuestions = [...questions]
     startTimer();
     loadQuestion();
-    //startButton.style = "display:none";
     startButton.style = "display:none";
 }
 
@@ -66,9 +71,9 @@ function startGame() {
 function startTimer() {
     timer = setInterval(function() {
         timeLeft --;
-        countdownTimeText.textContent = timeLeft;
+        renderScores();
         if (timeLeft >=0 ) {
-            if (availableQuestions.length === 0 && timeLeft > 0) {
+            if (questionCounter > questions.length  && timeLeft > 0) {
                 clearInterval(timer);
                 gameOver();
             }
@@ -78,6 +83,11 @@ function startTimer() {
             gameOver();            
         }
     }, 1000);
+}
+
+function renderScores() {
+    scoreEl.textContent = score
+    countdownTimeText.textContent = timeLeft;
 }
 
 function saveHighscore() {
@@ -91,18 +101,20 @@ function gameOver () {
 }
 
 
-
     //load highscore form | run highscore load function
     //option to play again
     //clears the rest of the game functions/renders
 
 function loadQuestion () {
+    questionCounter++;
+    questionCounterEl.textContent = questionCounter + '/10';
+
+
     //generate random number. then load the question with random number index
-   if (availableQuestions.length === 0 && questionCounter >= MAX_QUESTIONS) {
-        gameOver();
+   if (questionCounter > questions.length && questionCounter >= MAX_QUESTIONS) {
+        return gameOver();
    }
     
-   questionCounter++;
     var i = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[i];
     questionEl.textContent = currentQuestion.question;
@@ -114,7 +126,6 @@ function loadQuestion () {
 
     availableQuestions.splice(i, 1);
 
-    acceptingAnswers = true;
 }
 
 //choice event listener
@@ -123,24 +134,46 @@ game.addEventListener('click', checkAnswer);
 function checkAnswer(event) {
     const selectedChoice = event.target;
     const selectedAnswer = selectedChoice.dataset["number"];
-    console.log(selectedAnswer == currentQuestion.correctAnswer);
-    loadQuestion();
+    
+    if ( String(selectedAnswer) === String(currentQuestion.correctAnswer)) {
+        correct();
+        setBackgroundGreen(event.target);
+    } else {
+        incorrect();
+        setBackgroundRed(event.target);
+    }
+    setTimeout(() => {
+        loadQuestion();
+    }, DELAY)
+    renderScores();
 }
 
 
 
 
+function setBackgroundGreen(element) {
+    element.classList.add('background-green');
+    setTimeout(() => {
+        element.classList.remove('background-green');
+    }, DELAY)
+}
 
+function setBackgroundRed(element) {
+    element.classList.add('background-red');
+    setTimeout(() => {
+        element.classList.remove('background-red');
+    }, DELAY)
+}
 
-//correct answer function - uses load question function 
+//correct answer function - add points to score
+function correct() {
+    score += CORRECT_BONUS;
+}
 
-//incorrect function - deducts time from the clock, calls load question function
-
-
-
-//scores are visible to the side of the game. if clicked on are accessible and also clearable
-
-
+//incorrect function - deducts time from the clock
+function incorrect(params) {
+    timeLeft -= TIME_PENALTY;
+}
 
 startButton.addEventListener("click", startGame); 
 
