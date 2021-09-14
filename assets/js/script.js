@@ -45,7 +45,7 @@ var questions = [
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 3;
 const TIME_PENALTY = 5;
-const DELAY = 1000;
+const DELAY = 750;
 const MAX_HIGHSCORES = 3;
 
 
@@ -113,18 +113,16 @@ function saveHighscore(event) {
 }
 
 function clearHighscoreHud() {
-    saveScoreBtn.textContent = "saved.";
     username.style = "display:none";
     saveScoreBtn.style = "display:none";
+    finalScoreEl.textContent = 'saved.';
 }
 
 username.addEventListener('keyup', function() {
     saveScoreBtn.disabled = !username.value;
 });
 
-
-saveScoreBtn.addEventListener('click', saveHighscore)
-
+saveScoreBtn.addEventListener('click', saveHighscore);
 
 function gameOver () {
     gameEl.style = "display:none";
@@ -157,10 +155,9 @@ function loadQuestion () {
     choiceD.textContent = availableQuestions[i].answers[3];
 
     availableQuestions.splice(i, 1);
+};
 
-}
-
-game.addEventListener('click', checkAnswer);
+answerCard.addEventListener('click', checkAnswer);
 
 function checkAnswer(event) {
     const selectedChoice = event.target;
@@ -195,10 +192,18 @@ function setBackgroundRed(element) {
 
 function correct() {
     score += CORRECT_BONUS;
+    scoreEl.classList.add('background-green');
+    setTimeout(() => {
+        scoreEl.classList.remove('background-green');
+    }, DELAY)
 }
 
-function incorrect(params) {
+function incorrect() {
     timeLeft -= TIME_PENALTY;
+    countdownTimeText.classList.add('background-red');
+    setTimeout(() => {
+        countdownTimeText.classList.remove('background-red');
+    }, DELAY)
 }
 
 startButton.addEventListener("click", startGame); 
