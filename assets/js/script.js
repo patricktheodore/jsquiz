@@ -26,8 +26,8 @@ var acceptingAnswers = false; //i want sommeone only to be able to click when th
 
 var questions = [
     {
-        question: "what is my first name?",
-        answers: ["a. patrick", "b.sturat", "c. alec", "d. gabriela"],
+        question: "does everything go in a variable",
+        answers: ["a. yes", "b. obvs not", "c. definitely not", "d. 100% no"],
         correctAnswer: 0
     },
     {     
@@ -163,6 +163,8 @@ function checkAnswer(event) {
     const selectedChoice = event.target;
     const selectedAnswer = selectedChoice.dataset["number"];
     
+    if (!event.target.classList.contains('choice-text')) return
+
     if ( String(selectedAnswer) === String(currentQuestion.correctAnswer)) {
         correct();
         setBackgroundGreen(event.target);
