@@ -7,10 +7,22 @@
     --secondary: #a7a7a7;
 }
 
+header {
+    margin-bottom: 2rem;
+}
+
+.start-button {
+   width: 20%;
+   height: 20%;
+   position: absolute;
+   left: 44%;
+   top: 40%
+}
+
 .choice-container {
     display: flex;
     margin-bottom: 1rem;
-    width: 50%;
+    width: 80%;
     font-size: 1rem;
     color: var(--light);
     cursor: pointer;
@@ -40,7 +52,7 @@
 .wrapper {
     display: flex;
     align-content: center;
-    justify-content: space-around;
+    justify-content: center;
     width: 100%;
 }
 
@@ -49,10 +61,94 @@
 }
 
 .game-info {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    margin-top: 1rem;
+}
+
+.bg-info {
+    background-color: var(--dark);
+    color: var(--light);
+    border: solid 1px var(--dark);
+    outline: none;
+    font-family: "proxima nova bold", "Helvetica Neue", Helvetica, Arial, Sans-serif;
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 1rem;
+    width: 4rem;
+    text-align: center;
+}
+
+.hud-label {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.exit-page {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-content: center;
+    padding-bottom: 5rem;
+}
+
+.exit-hud {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+}
+
+#final-score {
+    background-color: white;
+    color: var(--dark);
+    border: solid 1px var(--dark);
+    outline: none;
+    font-family: "proxima nova bold", "Helvetica Neue", Helvetica, Arial, Sans-serif;
+    font-size: 2rem;
+    border-radius: 4px;
+    padding: 2rem 0;
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.final-score-label {
+    font-size: 1.5rem;
+}
+
+.highscore-form {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+#highscore-form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#save-score-btn {
+    margin-top: 1rem;
+}
+
+#username {
+    color: var(--dark);
+    cursor: text;
+    border: solid 1px var(--dark);
+    outline: none;
+    font-family: "proxima nova bold", "Helvetica Neue", Helvetica, Arial, Sans-serif;
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 1rem;
+    width: 10rem;
+    text-decoration: none;
+    text-align: center;
 }
 
 /* color classes*/

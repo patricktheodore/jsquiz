@@ -11,7 +11,12 @@ var answerCard = document.getElementById("game");
 var gameEl = document.querySelector(".container");
 var scoreEl = document.getElementById("score");
 var questionCounterEl = document.getElementById("question-counter");
-
+var gameHud = document.querySelector(".game-info");
+var endGameScore = document.querySelector(".exit-page");
+var finalScoreEl = document.getElementById("final-score");
+var saveScoreBtn = document.getElementById('save-score-btn');
+const username = document.getElementById('username');
+const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
 
 var currentQuestion = {};
 var availableQuestions = [];
@@ -39,24 +44,24 @@ var questions = [
 
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 3;
-const TIME_PENALTY = 5;  // 5 sec
+const TIME_PENALTY = 5;
 const DELAY = 1000;
+const MAX_HIGHSCORES = 3;
 
 
 var timer;
 var timeLeft;
 var question;
 var possibleAnswers;
+var finalScore;
 
-//javascript code quiz
-
-//on page load, fetch scores stored in local storage. init will run on page load
 function init() {
 }
 
-//start game function that begins timer
+
 function startGame() {
     answerCard.style = "display:inline";
+    gameHud.style = "display:flex";
     timeLeft = 120;
     questionCounter = 0;
     score = 0;
@@ -66,8 +71,6 @@ function startGame() {
     startButton.style = "display:none";
 }
 
-//start button function - starts a countdown timer from 60 using event listener on start button
-//also calls function game over if time hits =< 0
 function startTimer() {
     timer = setInterval(function() {
         timeLeft --;
@@ -90,27 +93,56 @@ function renderScores() {
     countdownTimeText.textContent = timeLeft;
 }
 
-function saveHighscore() {
-    //show or create a highscore form. score === timeleft, option to enter a name and save
+function saveHighscore(event) {
+    event.preventDefault();
 
+    const scoreToStore = {
+        score: finalScore,
+        name: username.value
+    };
+
+    highScores.push(scoreToStore);
+    highScores.sort((a,b) => {
+        return b.score - a.score;
+    } )
+
+    highScores.splice(3);
+
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+    clearHighscoreHud();
 }
+
+function clearHighscoreHud() {
+    saveScoreBtn.textContent = "saved.";
+    username.style = "display:none";
+    saveScoreBtn.style = "display:none";
+}
+
+username.addEventListener('keyup', function() {
+    saveScoreBtn.disabled = !username.value;
+});
+
+
+saveScoreBtn.addEventListener('click', saveHighscore)
+
 
 function gameOver () {
     gameEl.style = "display:none";
-
+    getFinalScore();
+    gameHud.style = "display:none";
+    endGameScore.style = "display:flex";
+    finalScoreEl.textContent = finalScore;
 }
 
-
-    //load highscore form | run highscore load function
-    //option to play again
-    //clears the rest of the game functions/renders
+function getFinalScore () {
+    var scoreAdd = score * timeLeft
+    finalScore = scoreAdd
+}
 
 function loadQuestion () {
     questionCounter++;
     questionCounterEl.textContent = questionCounter + '/10';
 
-
-    //generate random number. then load the question with random number index
    if (questionCounter > questions.length && questionCounter >= MAX_QUESTIONS) {
         return gameOver();
    }
@@ -128,7 +160,6 @@ function loadQuestion () {
 
 }
 
-//choice event listener
 game.addEventListener('click', checkAnswer);
 
 function checkAnswer(event) {
@@ -148,9 +179,6 @@ function checkAnswer(event) {
     renderScores();
 }
 
-
-
-
 function setBackgroundGreen(element) {
     element.classList.add('background-green');
     setTimeout(() => {
@@ -165,12 +193,10 @@ function setBackgroundRed(element) {
     }, DELAY)
 }
 
-//correct answer function - add points to score
 function correct() {
     score += CORRECT_BONUS;
 }
 
-//incorrect function - deducts time from the clock
 function incorrect(params) {
     timeLeft -= TIME_PENALTY;
 }
