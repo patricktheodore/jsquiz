@@ -1,4 +1,4 @@
-//defining variables 
+//defining selectors
 var countdownTimeText = document.querySelector(".timer-text");
 var startButton = document.querySelector(".start-button");
 var questionEl = document.getElementById("question");
@@ -18,12 +18,18 @@ var saveScoreBtn = document.getElementById('save-score-btn');
 const username = document.getElementById('username');
 const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
 
+//defining some empty variables
 var currentQuestion = {};
 var availableQuestions = [];
 var score = 0;
 var questionCounter = 0;
-var acceptingAnswers = false; //i want sommeone only to be able to click when there is an option available (create delay in between clicks)
+var timer;
+var timeLeft;
+var question;
+var possibleAnswers;
+var finalScore;
 
+//questions to render
 var questions = [
     {
         question: "how do we define a variable?",
@@ -77,144 +83,142 @@ var questions = [
     },
 ];  
 
+//defining constants to be referenced throughout
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 10;
 const TIME_PENALTY = 5;
 const DELAY = 750;
 const MAX_HIGHSCORES = 3;
 
-
-var timer;
-var timeLeft;
-var question;
-var possibleAnswers;
-var finalScore;
-
 function init() {
 }
 
-
+//start game function which will display game elements and hide the start button. also will start countdown timer
 function startGame() {
     answerCard.style = "display:inline";
     gameHud.style = "display:flex";
     timeLeft = 120;
     questionCounter = 0;
-    score = 0;
-    availableQuestions = [...questions]
-    startTimer();
-    loadQuestion();
+    score = 0; //setting score to 0
+    availableQuestions = [...questions] 
+    startTimer(); //start time interval
+    loadQuestion(); //will load a question
     startButton.style = "display:none";
 }
 
+//timer function, counting down from 120
 function startTimer() {
     timer = setInterval(function() {
         timeLeft --;
         renderScores();
         if (timeLeft >=0 ) {
-            if (questionCounter > questions.length  && timeLeft > 0) {
+            if (questionCounter > questions.length  && timeLeft > 0) { //setting rules to check if the game is over
                 clearInterval(timer);
                 gameOver();
             }
         }
-        if (timeLeft === 0) {
-            clearInterval(timer);
-            gameOver();            
+        if (timeLeft === 0) { //end the game when timer hits 0
+            clearInterval(timer); //clear timer interval
+            gameOver(); //run game over function if the above is met     
         }
-    }, 1000);
+    }, 1000); //1second
 }
 
+//change game HUD
 function renderScores() {
     scoreEl.textContent = score
     countdownTimeText.textContent = timeLeft;
 }
 
+//save highscore 
 function saveHighscore(event) {
-    event.preventDefault();
+    event.preventDefault(); //prevent page refresh
 
-    const scoreToStore = {
+    const scoreToStore = { //creating an object to set localStorage
         score: finalScore,
         name: username.value
     };
 
-    highScores.push(scoreToStore);
+    highScores.push(scoreToStore); //sort the highscores from highest to lowest
     highScores.sort((a,b) => {
         return b.score - a.score;
     } )
 
-    highScores.splice(3);
+    highScores.splice(3); //keep only the top 3 scores
 
-    localStorage.setItem("highScores", JSON.stringify(highScores));
-    clearHighscoreHud();
+    localStorage.setItem("highScores", JSON.stringify(highScores)); //convert with JSON string
+    clearHighscoreHud(); //run clearhighscoresHUD function
 }
 
-function clearHighscoreHud() {
-    username.style = "display:none";
+//improve user experience, also only allows one score to be saved each game. 
+function clearHighscoreHud() { 
+    username.style = "display:none"; 
     saveScoreBtn.style = "display:none";
     finalScoreEl.textContent = 'saved.';
 }
 
-username.addEventListener('keyup', function() {
+username.addEventListener('keyup', function() { //cant save highscore without a name input, by disabled the button
     saveScoreBtn.disabled = !username.value;
 });
 
 saveScoreBtn.addEventListener('click', saveHighscore);
 
 function gameOver () {
-    gameEl.style = "display:none";
+    gameEl.style = "display:none"; //hide components no longer needed
     getFinalScore();
     gameHud.style = "display:none";
     endGameScore.style = "display:flex";
-    finalScoreEl.textContent = finalScore;
+    finalScoreEl.textContent = finalScore; //set final score
 }
 
 function getFinalScore () {
-    var scoreAdd = score * timeLeft
+    var scoreAdd = score * timeLeft //running a calculating to get a more dynamic score
     finalScore = scoreAdd
 }
 
-function loadQuestion () {
+function loadQuestion () { //load question function
     questionCounter++;
-    questionCounterEl.textContent = questionCounter + '/10';
+    questionCounterEl.textContent = questionCounter + '/10'; //giving user a questions counter display
 
-   if (questionCounter > questions.length && questionCounter >= MAX_QUESTIONS) {
+   if (questionCounter > questions.length && questionCounter >= MAX_QUESTIONS) { //if our counter is bigger than our max questions constant, we have no more questions to ask and run game over function
         return gameOver();
    }
     
-    var i = Math.floor(Math.random() * availableQuestions.length);
+    var i = Math.floor(Math.random() * availableQuestions.length); //selecting a random question from array
     currentQuestion = availableQuestions[i];
     questionEl.textContent = currentQuestion.question;
 
-    choiceA.textContent = availableQuestions[i].answers[0];
+    choiceA.textContent = availableQuestions[i].answers[0]; //displaying options from the same object referenced by i
     choiceB.textContent = availableQuestions[i].answers[1];
     choiceC.textContent = availableQuestions[i].answers[2];
     choiceD.textContent = availableQuestions[i].answers[3];
 
-    availableQuestions.splice(i, 1);
+    availableQuestions.splice(i, 1); //remove the question we have just asked from available questions var so it cannot be selected again
 };
 
 answerCard.addEventListener('click', checkAnswer);
 
 function checkAnswer(event) {
-    const selectedChoice = event.target;
-    const selectedAnswer = selectedChoice.dataset["number"];
+    const selectedChoice = event.target; //check if a button was clicked
+    const selectedAnswer = selectedChoice.dataset["number"]; //if it was check to see if its data-attribute matches the correct answer
     
-    if (!event.target.classList.contains('choice-text')) return
+    if (!event.target.classList.contains('choice-text')) return //stop the div containing choices from returning an incorrect answer. 
 
-    if ( String(selectedAnswer) === String(currentQuestion.correctAnswer)) {
+    if ( String(selectedAnswer) === String(currentQuestion.correctAnswer)) { //converting to the same type and checking if the value is the same 
         correct();
-        setBackgroundGreen(event.target);
+        setBackgroundGreen(event.target); //changing the container to green to show correct answer
     } else {
         incorrect();
-        setBackgroundRed(event.target);
+        setBackgroundRed(event.target); //change the container to red to show incorrect answer
     }
     setTimeout(() => {
         loadQuestion();
-    }, DELAY)
+    }, DELAY) //runs a delay so for better user experience 
     renderScores();
 }
 
 function setBackgroundGreen(element) {
-    element.classList.add('background-green');
+    element.classList.add('background-green'); //add a html class, that references a css selector to change the background color
     setTimeout(() => {
         element.classList.remove('background-green');
     }, DELAY)
@@ -228,21 +232,21 @@ function setBackgroundRed(element) {
 }
 
 function correct() {
-    score += CORRECT_BONUS;
-    scoreEl.classList.add('background-green');
+    score += CORRECT_BONUS; 
+    scoreEl.classList.add('background-green'); //change the score display to background green for the same amount of time as the choice container
     setTimeout(() => {
         scoreEl.classList.remove('background-green');
     }, DELAY)
 }
 
 function incorrect() {
-    timeLeft -= TIME_PENALTY;
+    timeLeft -= TIME_PENALTY; //change the time to flash red indicating a loss of time referenced by time penalty const
     countdownTimeText.classList.add('background-red');
     setTimeout(() => {
         countdownTimeText.classList.remove('background-red');
     }, DELAY)
 }
 
-startButton.addEventListener("click", startGame); 
+startButton.addEventListener("click", startGame); //start game button :) 
 
 init();
