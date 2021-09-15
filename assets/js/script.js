@@ -26,24 +26,59 @@ var acceptingAnswers = false; //i want sommeone only to be able to click when th
 
 var questions = [
     {
-        question: "does everything go in a variable",
-        answers: ["a. yes", "b. obvs not", "c. definitely not", "d. 100% no"],
+        question: "how do we define a variable?",
+        answers: ["a. let", "b. const", "c. my variable is", "d. variable ="],
         correctAnswer: 0
     },
     {     
-        question: "what is my last name?",
-        answers: ["a. patrick", "b.sara", "c. alec", "d. gabriela"],
+        question: "what is the correct syntax to log something to our console?",
+        answers: ["a. please print this", "b. console.log()", "c. consolelog[]", "d. logmyconsole.[}"],
         correctAnswer: 1
     },
     {     
-        question: "what is my middle name?",
-        answers: ["a. patrick", "b.sturat", "c. alec", "d. theodore"],
+        question: "how can we change the style of an element on our html page",
+        answers: ["a. js-color-changer", "b. colour-to", "c. css.change", "d. element.style = '';"],
         correctAnswer: 3
-    }
+    },
+    {     
+        question: "how can we select an element by it's id?",
+        answers: ["a. querySelectMyId", "b. hey-boy-get-my-id.js", "c. document.getElementById('');", "d. fetchMyElement"],
+        correctAnswer: 2
+    },
+    {     
+        question: "what method do you have to use to store things in localStorage?",
+        answers: ["a. JSON.stringify", "b. JSON.parse", "c. js-score-setter", "d. save-my-score-papi"],
+        correctAnswer: 0
+    },
+    {     
+        question: "what is the correct for loop syntax?",
+        answers: ["a. for (let i = 0; i < element.length; i++) {}", "b. for i = 0: i < 0: i+=", "c. for-ray-me-do-la", "d. for (i = 0; i < var: i = 0"],
+        correctAnswer: 0
+    },
+    {     
+        question: "what is the correct getItem from storage syntax?",
+        answers: ["a. getItem(JSON.parse)", "b. JSON.parse(localStorage.getItem('')", "c. goGetIt", "d. pleaseGoGetIt"],
+        correctAnswer: 1
+    },
+    {     
+        question: "what method can we use to remove a string from an array?",
+        answers: ["a. splice", "b. pop", "c. push", "d. pinch"],
+        correctAnswer: 0
+    },
+    {     
+        question: "what is the correct syntax to compare both value and type",
+        answers: ["a. equals", "b. ====!", "c. ===", "d. +=="],
+        correctAnswer: 2
+    },
+    {     
+        question: "is java and javaScript the same thing",
+        answers: ["a. yeah, as well as java juice", "b. yes", "c. defintely yes", "d. no"],
+        correctAnswer: 3
+    },
 ];  
 
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 10;
 const TIME_PENALTY = 5;
 const DELAY = 750;
 const MAX_HIGHSCORES = 3;
