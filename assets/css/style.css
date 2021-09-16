@@ -148,3 +148,12 @@ body {
     box-shadow: none;
     transform: none;
 }
+
+.howTo {
+    list-style: none;
+}
+
+.howTo > li::before {
+    content: "-";
+    text-indent: -5px;
+}
