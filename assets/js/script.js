@@ -33,7 +33,7 @@ var finalScore;
 var questions = [
     {
         question: "how do we define a variable?",
-        answers: ["a. let", "b. const", "c. my variable is", "d. variable ="],
+        answers: ["a. let", "b. a man walks into a var", "c. my variable is", "d. variable ="],
         correctAnswer: 0
     },
     {     
@@ -48,7 +48,7 @@ var questions = [
     },
     {     
         question: "how can we select an element by it's id?",
-        answers: ["a. querySelectMyId", "b. hey-boy-get-my-id.js", "c. document.getElementById('');", "d. fetchMyElement"],
+        answers: ["a. querySelect-MyId", "b. hey-boy-get-my-id.js", "c. document. getElementById('');", "d. fetchMy-Element"],
         correctAnswer: 2
     },
     {     
@@ -63,12 +63,12 @@ var questions = [
     },
     {     
         question: "what is the correct getItem from storage syntax?",
-        answers: ["a. getItem(JSON.parse)", "b. JSON.parse(localStorage.getItem('')", "c. goGetIt", "d. pleaseGoGetIt"],
+        answers: ["a. getItem (JSON.parse)", "b. JSON.parse (localStorage. getItem('')", "c. goGetIt", "d. pleaseGoGetIt"],
         correctAnswer: 1
     },
     {     
         question: "what method can we use to remove a string from an array?",
-        answers: ["a. splice", "b. pop", "c. push", "d. pinch"],
+        answers: ["a. splice", "b. ploop", "c. push", "d. pinch"],
         correctAnswer: 0
     },
     {     
@@ -172,8 +172,8 @@ function gameOver () {
 }
 
 function getFinalScore () {
-    var scoreAdd = score * timeLeft //running a calculating to get a more dynamic score
-    finalScore = scoreAdd
+    var scoreAdd = score * (timeLeft + 1); //running a calculating to get a more dynamic score
+    finalScore = scoreAdd;
 }
 
 function loadQuestion () { //load question function
